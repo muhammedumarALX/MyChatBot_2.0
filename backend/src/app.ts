@@ -6,6 +6,9 @@ config();
 
 const app = express()
 
+// Use express.json() middleware to parse incoming JSON data
+app.use(express.json());
+
 app.use("/api/v1", appRouter)
 
 export default app;
