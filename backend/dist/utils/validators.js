@@ -17,9 +17,12 @@ export const validate = (validations) => {
         }
     };
 };
-export const signupValidator = [
-    body('name').notEmpty().withMessage("Name Is Required"),
+export const loginValidator = [
     body('email').trim().isEmail().withMessage("Email Is Required"),
     body('password').trim().isLength({ min: 6 }).withMessage("Name Is Required"),
+];
+export const signupValidator = [
+    body('name').notEmpty().withMessage("Name Is Required"),
+    ...loginValidator,
 ];
 //# sourceMappingURL=validators.js.map

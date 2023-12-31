@@ -1,5 +1,7 @@
 import User from "../db/models/User.js";
 import { hash, compare } from "bcrypt";
+import { createToken } from "../utils/token-manager.js";
+import { COOKIE_NAME } from "../utils/constants.js";
 export const getAllUsers = async (req, res, next) => {
     try {
         const users = await User.find();
@@ -24,6 +26,16 @@ export const userSignup = async (req, res, next) => {
         // create new user in db
         const user = new User({ name, email, password: hashedPassword });
         await user.save();
+        // create a new token when a user signs up
+        const token = createToken(user._id.toString(), user.email, '7d');
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        res.cookie(COOKIE_NAME, token, {
+            path: "/",
+            domain: "localhost",
+            signed: true,
+            httpOnly: true,
+        });
         return res.status(201).json({ message: "new User created", name: user.name, email: user.email, password: user.password });
     }
     catch (error) {
