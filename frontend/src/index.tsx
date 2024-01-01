@@ -6,6 +6,12 @@ import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import axios from 'axios';
+import { Toaster } from 'react-hot-toast';
+
+// creates an axios baseUrl globally and adds http credetials to responses
+axios.defaults.baseURL = 'http://localhost:5000/api/v1';
+axios.defaults.withCredentials = true;
 
 const theme = createTheme({
   typography: {
@@ -22,6 +28,7 @@ root.render(
     <AuthProvider>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
+          <Toaster position='top-center'/>
           <App />
         </ThemeProvider>
       </BrowserRouter>

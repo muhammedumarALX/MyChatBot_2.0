@@ -1,12 +1,12 @@
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 export const validate = (validations) => {
     return async (req, res, next) => {
         try {
-            for (let validation of validations) {
-                const result = await validation.run(req);
+            const validationPromises = validations.map((validation) => validation.run(req));
+            const validationResults = await Promise.all(validationPromises);
+            for (const result of validationResults) {
                 if (!result.isEmpty()) {
-                    const errors = validationResult(req);
-                    return res.status(422).json({ errors: errors.array() });
+                    return res.status(422).json({ errors: result.array() });
                 }
             }
             next(); // Move to the next middleware/route handler if no validation errors
@@ -18,8 +18,11 @@ export const validate = (validations) => {
     };
 };
 export const loginValidator = [
-    body('email').trim().isEmail().withMessage("Email Is Required"),
-    body('password').trim().isLength({ min: 6 }).withMessage("Name Is Required"),
+    body("email").trim().isEmail().withMessage("Email is required"),
+    body("password")
+        .trim()
+        .isLength({ min: 6 })
+        .withMessage("Password should contain at least 6 characters"),
 ];
 export const signupValidator = [
     body('name').notEmpty().withMessage("Name Is Required"),
