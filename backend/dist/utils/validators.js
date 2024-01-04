@@ -28,4 +28,7 @@ export const signupValidator = [
     body('name').notEmpty().withMessage("Name Is Required"),
     ...loginValidator,
 ];
+export const chatMessageValidator = [
+    body("message").notEmpty().withMessage("Message is required")
+];
 //# sourceMappingURL=validators.js.map
