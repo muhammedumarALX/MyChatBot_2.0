@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import mongoose from "mongoose";
+// Define the chat schema
 const chatSchema = new mongoose.Schema({
     id: {
         type: String,
@@ -12,8 +13,9 @@ const chatSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
-    }
+    },
 });
+// Define the user schema using the chat schema as a nested field
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -28,7 +30,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    chats: [chatSchema]
+    chats: [chatSchema], // Using chatSchema as an array within the user schema
 });
-export default mongoose.model("User", userSchema);
+// Create and export the User model based on the user schema
+export default mongoose.model('User', userSchema);
 //# sourceMappingURL=User.js.map

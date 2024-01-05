@@ -14,7 +14,7 @@ export const generateChatCompletion = async (req, res, next) => {
             role,
             content,
         }));
-        chats.push({ content: message, role: 'user' });
+        user.chats.push({ content: message, role: 'user' });
         // connecting to openai and send the chats
         const config = configureOpenAI();
         const openai = new OpenAIApi(config);
@@ -54,18 +54,24 @@ export const sendChatsToUser = async (req, res, next) => {
 };
 export const deleteChats = async (req, res, next) => {
     try {
+        // Find the user by ID
         const user = await User.findById(res.locals.jwtData.id);
         if (!user) {
             return res.status(401).send("User not registered or Token not found");
         }
+        // Ensure the user ID matches the token ID
         if (user._id.toString() !== res.locals.jwtData.id) {
             return res.status(401).send("Permissions didn't match");
         }
-        user.chats = []; // Modify the user's chats directly
-        await user.save(); // Save the modified user
+        // Clear the chats array of the user
+        user.chats = [];
+        // Save the modified user to the database
+        await user.save();
+        // Fetch the updated user with cleared chats from the database
+        const updatedUser = await User.findById(res.locals.jwtData.id);
         return res
             .status(200)
-            .json({ message: "Chats deleted successfully", chats: user.chats });
+            .json({ message: "Chats deleted successfully", chats: updatedUser?.chats });
     }
     catch (error) {
         console.log(error);

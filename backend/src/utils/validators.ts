@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { body, ValidationChain, validationResult } from "express-validator";
+import { body, ValidationChain} from "express-validator";
 
 export const validate = (validations: ValidationChain[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -36,5 +36,5 @@ export const signupValidator: ValidationChain[] = [
 ];
 
 export const chatMessageValidator = [
-  body("message").notEmpty().withMessage("Message is required")
+  body("message").notEmpty().withMessage("Message is required"),
 ];
