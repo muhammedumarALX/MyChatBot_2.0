@@ -21,3 +21,13 @@ export const loginUser = async (email: string, password: string) => {
     console.log(data)
     return data;
   };
+
+  export const sendChatRequest = async (message: string) => {
+    const res = await axios.post("/chat/new", {message});
+    if (res.status !== 200) {
+      throw new Error("Unable to send chats");
+    }
+    const data = await res.data;
+    console.log(data)
+    return data;
+  }
