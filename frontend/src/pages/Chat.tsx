@@ -1,8 +1,11 @@
 import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import toast from 'react-hot-toast'
 import { IoMdSend } from 'react-icons/io'
+import { useNavigate } from 'react-router-dom'
+import ChatItem from '../components/chat/ChatItem'
 import { useAuth } from '../context/AuthContext'
-// import { sendChatRequest } from '../helpers/api-communicator'
+import { deleteUserChats, getUserChats, sendChatRequest } from '../helpers/api-communicator'
 
 type Message = {
   role: "user" | "assistant";
@@ -11,6 +14,7 @@ type Message = {
 
 
 const Chat = () => {
+  const navigate = useNavigate()
   const auth = useAuth()
   const inputRef = useRef<HTMLInputElement>(null)
   const [chatMessages, setChatMessages] = useState<Message[]>([])
@@ -27,10 +31,41 @@ const Chat = () => {
     const newMessage: Message = {role: "user", content};
     setChatMessages((prev) => [...prev, newMessage])
 
-    //sends the user input to the backend
-    // const chatData = await sendChatRequest(content)
-    // setChatMessages([...chatData.chats])
+    // sends the user input to the backend
+    const chatData = await sendChatRequest(content)
+    setChatMessages([...chatData.chats])
   }
+
+  const handleDelete = async () => {
+    try {
+      await deleteUserChats();
+      setChatMessages([]);
+      toast.success("Deleted Chats Successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Deleting Chats Failed", {id: "deletechats"})
+    }
+  }
+
+  useLayoutEffect(() => {
+    if (auth?.isLoggedIn && auth?.user) {
+      toast.loading("Loading Chats", {id: "loadchats"});
+      getUserChats().then((data) => {
+          setChatMessages([...data.chats])
+          toast.success("Sucessfully loaded chats", {id: "loadchats"})
+        }).catch((err) => {
+          console.log(err);
+          toast.error("Loading failed", {id: "loadchats"})
+        });
+    }
+
+  }, [auth]);
+
+  useEffect(() => {
+    if(!auth?.user){
+      return navigate("/login")
+    }
+  }, [auth])
 
   return (
     <Box sx={{
@@ -60,14 +95,14 @@ const Chat = () => {
               color: "black",
               fontweight: 700,
             }}
-          >{auth?.user?.name[0]}</Avatar>
-          <Typography sx={{mx: "auto", fontfamily: "work sans"}}>You are talking to a chatBOT</Typography>
+          >{ auth?.user?.name[0]}</Avatar>
+          <Typography sx={{mx: "auto", fontfamily: "work sans"}} >You are talking to a chatBOT</Typography>
           <Typography sx={{mx: "auto", fontFamily: "work sans", my: 4, p: 3}}>
             You can ask some questions related to Knowledge, Business, Advices, Education, etc.
              But avoid sharing personal information
           </Typography>
           <Button
-            
+            onClick={handleDelete}
             sx={{
               width: "200px",
               my: 'auto',
@@ -109,7 +144,9 @@ const Chat = () => {
             color: "white"
           }}
         >
-         
+         {chatMessages.map((chat, index) => (
+          <ChatItem content={chat.content} role={chat.role} key={index} />
+         ))}
         </Box>
         <div 
           style={{
