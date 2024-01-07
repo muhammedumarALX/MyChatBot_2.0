@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { IoMdSend } from 'react-icons/io'
 import { useNavigate } from 'react-router-dom'
@@ -47,7 +47,7 @@ const Chat = () => {
     }
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (auth?.isLoggedIn && auth?.user) {
       toast.loading("Loading Chats", {id: "loadchats"});
       getUserChats().then((data) => {
@@ -65,7 +65,7 @@ const Chat = () => {
     if(!auth?.user){
       return navigate("/login")
     }
-  }, [auth])
+  }, [auth, navigate])
 
   return (
     <Box sx={{

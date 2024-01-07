@@ -138,7 +138,7 @@ export const userLogout = async (req: Request, res: Response, next: NextFunction
           });
         return res
         .status(200)
-        .json({message: "Logout successful"})
+        .json({message: "Logout successful", name: user.name, email: user.email})
     } catch (error) {
         console.log(error)
         return res.status(200).json({ message: "Error", cause: error.message }); // Send an error response with the error message

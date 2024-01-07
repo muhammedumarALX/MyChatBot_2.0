@@ -4,7 +4,7 @@ import CustomizedInput from '../components/shared/CustomizedInput'
 import {IoIosLogIn} from 'react-icons/io'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -32,7 +32,7 @@ const Login = () => {
         if (auth?.user){
             return navigate("/chat")
         }
-    }, [auth])
+    }, [auth, navigate])
 
   return (
     <Box width={"100%"} height={"100%"} display="flex" flex={1}>
