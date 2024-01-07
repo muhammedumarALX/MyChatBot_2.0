@@ -117,3 +117,30 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
         return res.status(200).json({ message: "Error", cause: error.message }); // Send an error response with the error message
     }
 }
+
+export const userLogout = async (req: Request, res: Response, next: NextFunction) => {
+    //user token check
+    try {
+        const user = await User.findById(res.locals.jwtData.id);
+        if (!user) {
+            return res.status(401).send("User not registered or Token not found")
+        }
+        if (user._id.toString() !== res.locals.jwtData.id){
+            return res.status(401).send("Permissions didn't match")
+        }
+
+        // clears the auth tokens
+        res.clearCookie(COOKIE_NAME, {
+            httpOnly: true,
+            domain: "localhost",
+            signed: true,
+            path: "/",
+          });
+        return res
+        .status(200)
+        .json({message: "Logout successful"})
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({ message: "Error", cause: error.message }); // Send an error response with the error message
+    }
+};
