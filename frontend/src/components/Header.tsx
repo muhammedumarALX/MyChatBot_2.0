@@ -7,8 +7,8 @@ import NavigationLink from './shared/NavigationLink'
 const Header = () => {
     const auth = useAuth();
   return (
-    <AppBar sx={{bgcolor: 'transparent', position: 'static', boxShadow: 'none'}}>
-        <Toolbar sx={{display: "flex"}}>
+    <AppBar sx={{bgcolor: 'transparent', position: 'sticky', boxShadow: 'none'}}>
+        <Toolbar sx={{display: "flex", justifyContent: "space-between", width: "95%"}}>
             <Logo/>
             <div>
                 {auth?.isLoggedIn ? (
