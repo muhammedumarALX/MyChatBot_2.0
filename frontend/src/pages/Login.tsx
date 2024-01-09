@@ -61,7 +61,7 @@ const Login = () => {
                     border: "none",
                   }}
             >
-                <Typography variant="h4" textAlign="center" padding={2} fontWeight={600}>Login</Typography>
+                <Typography variant="h4" textAlign="center" padding={2} fontWeight={600}>Welcome Back</Typography>
                 <CustomizedInput type='email' name='email' label='Email'/>
                 <CustomizedInput type='password' name='password' label='Password'/>
                 <Button

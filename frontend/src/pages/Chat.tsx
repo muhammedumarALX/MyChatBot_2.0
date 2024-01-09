@@ -33,7 +33,13 @@ const Chat = () => {
 
     // sends the user input to the backend
     const chatData = await sendChatRequest(content)
-    setChatMessages([...chatData.chats])
+    try {
+      if (chatData) {
+        setChatMessages([...chatData.chats])
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleDelete = async () => {

@@ -8,7 +8,7 @@ const Header = () => {
     const auth = useAuth();
   return (
     <AppBar sx={{bgcolor: 'transparent', position: 'sticky', boxShadow: 'none'}}>
-        <Toolbar sx={{display: "flex", justifyContent: "space-between", width: "95%"}}>
+        <Toolbar sx={{display: "flex", justifyContent: "space-between", width: "99%"}}>
             <Logo/>
             <div>
                 {auth?.isLoggedIn ? (
